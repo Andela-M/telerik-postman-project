@@ -1,0 +1,514 @@
+{
+	"info": {
+		"_postman_id": "4888473a-b0cf-4763-a90c-826c20909f45",
+		"name": "GitHub Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46436980",
+		"_collection_link": "https://andjelamicic.postman.co/workspace/Andjela-Micic's-Workspace~266cbfed-c085-419e-8c48-3500325b381c/collection/46436980-4888473a-b0cf-4763-a90c-826c20909f45?action=share&source=collection_link&creator=46436980"
+	},
+	"item": [
+		{
+			"name": "Authenticated User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{github_base_url}}/user",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get license template",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{github_base_url}}/licenses",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"licenses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get gitignore template",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{github_base_url}}/gitignore/templates",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"gitignore",
+						"templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Repository",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Repository name is unique and present\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.name).to.be.a('string').and.to.not.be.empty;\r",
+							"});\r",
+							"pm.test(\"Repository description is correct\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.description).to.eql(\"Test repository created for Telerik Homework\");\r",
+							"});\r",
+							"pm.test(\"Repository is public\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.private).to.be.false;\r",
+							"});\r",
+							"const responseData = pm.response.json();\r",
+							"pm.environment.set(\"repo_name\", responseData.name);\r",
+							"pm.environment.set(\"repo_owner\", responseData.owner.login);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"my-telerik-automation-repo-with-init-{{$timestamp}}\",\r\n    \"description\": \"Test repository created for Telerik Homework\",\r\n    \"private\": false,\r\n    \"auto_init\": true,\r\n    \"license_template\": \"mit\",\r\n    \"gitignore_template\": \"Node\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{github_base_url}}/user/repos",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"user",
+						"repos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Issue has a required title\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.title).to.eql(\"Bug: Login button not responding after 3 attempts\");\r",
+							"});\r",
+							"pm.test(\"Issue contains body describing the problem\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.body).to.eql(\"When users attempt to login into his account, the Login button is not responsing after the third attempt\");\r",
+							"});\r",
+							"const responseData = pm.response.json();\r",
+							"pm.environment.set(\"issue_number\", responseData.number);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Bug: Login button not responding after 3 attempts\",\r\n    \"body\": \"When users attempt to login into his account, the Login button is not responsing after the third attempt\",\r\n    \"labels\": [\"bug\", \"high priority\", \"frontend\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}/issues",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}",
+						"issues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Created Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"New issue showing as sucessfully created\", function () {\r",
+							"    const issues = pm.response.json(); \r",
+							"    const expectedIssueNumber = pm.environment.get(\"issue_number\");\r",
+							"    const foundIssue = issues.find(issue =>\r",
+							"        issue.number == expectedIssueNumber);\r",
+							"\r",
+							"    pm.expect(foundIssue).to.be.an('object', \"Created issue not found in the list.\");     \r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}/issues",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}",
+						"issues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Comment on Existing Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Comment body is correct\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.body).to.eql(\"Issue will be fixed with priority\");\r",
+							"});\r",
+							"pm.test(\"Comment ID is returned and is a number\", function () {\r",
+							"    const responseData = pm.response.json(); \r",
+							"    pm.expect(responseData.id).to.be.a('number');\r",
+							"    pm.expect(responseData.id).to.be.above(0);\r",
+							"});\r",
+							"const responseData = pm.response.json();\r",
+							"pm.environment.set(\"comment_id\", responseData.id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"body\": \"Issue will be fixed with priority\"\r\n}"
+				},
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}/issues/{{issue_number}}/comments",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}",
+						"issues",
+						"{{issue_number}}",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Created Comment on Existing Issue",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 OK\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Number of comments equals 1\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    pm.expect(responseData.comments).to.eql(1, \"The issue should have 1 comment after adding one.\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}/issues/{{issue_number}}",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}",
+						"issues",
+						"{{issue_number}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Issue Status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Issue state updated from open to closed\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.state).to.eql(\"closed\");\r",
+							"});\r",
+							"pm.test(\"Issue state reason set to completed\", function () {\r",
+							"    const response = pm.response.json();\r",
+							"    pm.expect(response.state_reason).to.eql(\"completed\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"state\": \"closed\",\r\n    \"state_reason\": \"completed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}/issues/{{issue_number}}",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}",
+						"issues",
+						"{{issue_number}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Repository",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Repository Deletion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404 Not Found after deletion\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{github_token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{github_base_url}}/repos/{{repo_owner}}/{{repo_name}}",
+					"host": [
+						"{{github_base_url}}"
+					],
+					"path": [
+						"repos",
+						"{{repo_owner}}",
+						"{{repo_name}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

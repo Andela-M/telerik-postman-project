@@ -1,0 +1,51 @@
+{
+	"id": "43659ce8-c5da-44ff-bb53-5825fe391d02",
+	"name": "GitHub API Homework",
+	"values": [
+		{
+			"key": "github_username",
+			"value": "Andela-M",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "github_base_url",
+			"value": "https://api.github.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "repo_name",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "repo_owner",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "issue_number",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "comment_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "github_token",
+			"value": "",
+			"type": "secret",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-07-07T11:40:09.904Z",
+	"_postman_exported_using": "Postman/11.53.0"
+}
