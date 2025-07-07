@@ -53,3 +53,31 @@ Environment variables are used to manage sensitive data (like your GitHub PAT) a
     * **For `base_url`:** Ensure it's `https://api.github.com` in both `Initial Value` and `Current Value` fields.
     * Click **`Save`** in the environment tab.
 4.  **Select the active environment:** In the environment dropdown menu (usually at the top right of Postman), make sure your "GitHub API Homework" environment is selected.
+
+### 3. How to Run the Collection
+
+Once the collection and environment are set up in Postman, you can run the API tests in two ways:
+
+#### a) Running Individual Requests
+
+* In Postman, go to the **`Collections`** sidebar.
+* Expand the `GitHub API Postman Collection`.
+* Click on any individual request (e.g., "GET User Profile" or "POST Create New Repository").
+* Review its details (URL, Headers, Body, Authorization tab).
+* Click the blue **`Send`** button (top right of the request tab).
+* Observe the API response in the lower pane (Status Code, Body, Headers).
+* Check the **`Test Results`** tab to see if the automated tests for that request passed.
+
+#### b) Running All Requests (Collection Runner)
+
+The Collection Runner is ideal for executing all tests in sequence and getting a summary report.
+
+* In Postman, go to the **`Collections`** sidebar.
+* **Right-click** on your `GitHub API Postman Collection` name.
+* Select **`Run collection`** from the context menu.
+* In the Collection Runner window that opens:
+    * Ensure your "GitHub API Homework" environment is selected in the **`Environment`** dropdown.
+    * Make sure "Run tests" is checked.
+    * You can keep "Iteration" as 1.
+    * Click the blue **`Run GitHub API Postman Collection`** button.
+* The runner will execute all requests in order, and you'll see a summary of passed and failed tests for each request.
